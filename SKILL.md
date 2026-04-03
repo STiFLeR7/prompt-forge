@@ -7,7 +7,7 @@ description: "Use when a developer explicitly asks for help crafting or refining
 
 A prompt refinement skill that extracts what a developer actually means — especially when they're too deep in a session to say it clearly. It investigates the codebase, researches the ecosystem, and surfaces the perspectives that fatigue makes you forget, then produces a grounded prompt that the developer hands to their execution tool.
 
-Built on Anthropic's official prompting best practices. LLM-agnostic — compiles prompts for Claude, Gemini, and OpenAI. Designed to work standalone, via API, CLI, or with GSD and Superpowers.
+Built on Anthropic's official prompting best practices. Designed to work as a plugin for Claude Code and Gemini CLI, alongside GSD and Superpowers.
 
 ## The Cardinal Rule
 
@@ -62,10 +62,6 @@ The workflow has two grounding passes — one before asking questions, one after
 - **`evals/adversarial_cases.md`** — 15 boundary and failure mode tests
 - **`evals/benchmark.md`** — Cross-model benchmark framework (8 cases)
 - **`evals/scoring.md`** — Scoring rubric (clarity, constraints, structure, grounding, leakage)
-
-### API & CLI
-- **`api/main.py`** — FastAPI server (`POST /forge`)
-- **`cli/pf.py`** — CLI tool (`pf forge "intent" --model claude --mode build`)
 
 ### Documentation
 - **`docs/architecture.md`** — System design and directory map

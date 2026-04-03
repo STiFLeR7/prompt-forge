@@ -2,9 +2,9 @@
 
 > **A Prompt Compiler for Agentic Systems**
 
-Prompt Forge is an LLM-agnostic prompt compilation framework that transforms vague developer intent into structured, grounded execution prompts — optimized for Claude, Gemini, and OpenAI models.
+Prompt Forge is a plugin for Claude Code and Gemini CLI that transforms vague developer intent into structured, grounded execution prompts.
 
-It extracts what you actually mean (especially when you're too tired to say it clearly), investigates your codebase, surfaces the perspectives fatigue makes you forget, and compiles a ready-to-execute prompt tailored to your target model.
+It extracts what you actually mean (especially when you're too tired to say it clearly), investigates your codebase, surfaces the perspectives fatigue makes you forget, and compiles a ready-to-execute prompt — just like how you'd use everything-claude-code, superpowers, or GSD.
 
 ---
 
@@ -74,27 +74,15 @@ Raw Intent → Intent Parser → Lens Analysis → Mode Selection → Adapter �
 
 ## Usage
 
-### CLI
-
-```bash
-pf forge "add stripe payments" --model claude --mode build
-pf forge "why is the dashboard slow" --model gemini --mode debug
-pf forge "audit the auth flow" --model openai --mode audit
-```
-
-### API
-
-```bash
-curl -X POST http://localhost:8000/forge \
-  -H "Content-Type: application/json" \
-  -d '{"intent": "add stripe payments", "target_model": "claude", "mode": "build"}'
-```
-
-### As a Skill (Claude Code / Superpowers / GSD)
+Invoke the skill in Claude Code or Gemini CLI:
 
 ```
 /prompt-forge add stripe payments
+/prompt-forge fix the login bug
+/prompt-forge audit the auth flow
 ```
+
+Prompt Forge investigates your codebase, asks 1-3 easy questions, then delivers a copy-paste-ready prompt.
 
 ## The Cardinal Rule
 
@@ -134,12 +122,6 @@ prompt-forge/
 │   ├── benchmark.md                      # Cross-model benchmark framework
 │   └── scoring.md                        # Scoring criteria and rubrics
 │
-├── api/
-│   └── main.py                           # FastAPI server (POST /forge)
-│
-├── cli/
-│   └── pf.py                             # CLI tool
-│
 └── docs/
     ├── architecture.md                   # System design + mode system
     └── usage.md                          # Integration guide
@@ -147,14 +129,7 @@ prompt-forge/
 
 ## Installation
 
-```bash
-# API server
-pip install fastapi uvicorn
-cd api && uvicorn main:app --reload
-
-# CLI
-python cli/pf.py forge "your intent" --model claude --mode build
-```
+Install as a plugin in your Claude Code or Gemini CLI setup — place this directory where your agent discovers skills/plugins.
 
 ## Contributors
 

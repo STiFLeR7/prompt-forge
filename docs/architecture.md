@@ -90,12 +90,6 @@ prompt-forge/
 |   |-- benchmark.md                      # Cross-model benchmark framework
 |   +-- scoring.md                        # Scoring rubric (clarity, constraints, etc.)
 |
-|-- api/
-|   +-- main.py                           # FastAPI server (POST /forge)
-|
-|-- cli/
-|   +-- pf.py                             # CLI tool
-|
 +-- docs/
     |-- architecture.md                   # This file
     +-- usage.md                          # Integration guide
@@ -153,10 +147,6 @@ Task-type blueprints, plugin output formats, and the context file template live 
 | How to communicate | `src/utils/helpers.md` |
 | Prompt structures | `prompts/templates/` |
 | Quality validation | `evals/` |
-
-### Dual Interface (API + CLI)
-
-Both `api/main.py` and `cli/pf.py` share the same compilation logic. The API serves programmatic integrations; the CLI serves developer workflows. Neither introduces unique logic — they're thin wrappers over the same pipeline.
 
 ## CLAUDE.md Integration
 
