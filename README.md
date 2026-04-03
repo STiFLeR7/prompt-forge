@@ -1,135 +1,183 @@
 # Prompt Forge
 
-> **A Prompt Compiler for Agentic Systems**
+**A prompt compiler skill for Claude Code, Gemini CLI, and other coding agents.**
 
-Prompt Forge is a plugin for Claude Code and Gemini CLI that transforms vague developer intent into structured, grounded execution prompts.
+**Solves prompt fatigue — the quality collapse that happens when you've been coding for hours and your prompts go from detailed instructions to "fix the auth thing."**
 
-It extracts what you actually mean (especially when you're too tired to say it clearly), investigates your codebase, surfaces the perspectives fatigue makes you forget, and compiles a ready-to-execute prompt — just like how you'd use everything-claude-code, superpowers, or GSD.
+[![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)](LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/STiFLeR7/prompt-forge?style=for-the-badge&logo=github&color=181717)](https://github.com/STiFLeR7/prompt-forge)
 
 ---
 
-## The Problem
+## Why This Exists
 
-**Developer fatigue kills prompt quality.** After a few hours of coding, your prompts go from "Refactor the auth middleware to use async/await, preserving the existing error handling, and run the test suite after" to "fix the auth thing." You know what you mean. Your LLM doesn't.
+You're three hours into a session. You know exactly what needs to happen — but you're too fried to write it properly. So you type "fix the login thing" and Claude hallucinates a solution to a problem you didn't describe.
 
-The problem isn't laziness — it's cognitive depletion. Edge cases, test coverage, security implications, existing patterns — these drop off when your working memory is full.
+The issue isn't Claude. It's your prompt. You stopped including context, constraints, file paths, test commands, and the six perspectives you'd normally think about. Not because you're lazy — because your working memory is full.
 
-## What Prompt Forge Does
+Prompt Forge sits between your tired brain and your coding agent. You type the vague thing. It reads your codebase, asks one or two easy questions, surfaces what you forgot, and hands you back a grounded, structured prompt you can paste and run.
 
-1. **Extracts your real intent** from whatever half-formed thought you type
-2. **Investigates the code** so the prompt references real names, real paths, real patterns
-3. **Surfaces the perspectives you're too tired to think about** — security, edge cases, testing, performance, compatibility
-4. **Compiles a grounded prompt** optimized for your target model (Claude, Gemini, or OpenAI)
+It works with [Superpowers](https://github.com/obra/superpowers) and [GSD](https://github.com/gsd-build/get-shit-done) — or standalone with raw Claude Code and Gemini CLI.
+
+---
 
 ## How It Works
 
 ```
-You type:     "fix the auth thing"
+You:          "fix the auth thing"
 
-Prompt Forge: [reads your code, finds the bug, checks patterns]
-              "I see loginUser() handles invalid passwords and missing
-               users differently. Is the bug about the missing user case?"
+Prompt Forge: [reads your code, greps for patterns, checks docs]
+              "loginUser() in auth-service.ts handles invalid passwords
+               and missing users differently. Is the bug about which one?"
 
-You:          "yeah"
+You:          "yeah the missing user case"
 
-Prompt Forge: [delivers a grounded, model-optimized prompt with
-               investigation steps, fix approach, test commands,
-               and a security note you forgot to mention]
+Prompt Forge: [delivers a grounded prompt with investigation steps,
+               fix approach, test commands, and a security note about
+               input validation you didn't think to mention]
 ```
 
-### The Pipeline
+The whole pipeline:
 
-```
-Raw Intent → Intent Parser → Lens Analysis → Mode Selection → Adapter → Compiled Prompt
-```
+1. **Read your input** — detect fatigue signals, find the hidden intent
+2. **First grounding** — read CLAUDE.md, scan the codebase, research docs
+3. **Ask 1-3 questions** — grounded, easy to answer (yes/no, pick-one)
+4. **Second grounding** — targeted deep-dive based on your answers
+5. **Apply lenses** — 9 perspectives that fatigue makes you skip
+6. **Compile the prompt** — structured, grounded, ready to paste
 
-| Stage | What Happens |
-|-------|-------------|
-| Intent Parser | Detect fatigue signals, ground in code + docs, ask smart questions |
-| Lens Analysis | Apply 9 perspective lenses (security, testing, architecture, etc.) |
-| Mode Selection | Apply mode-specific emphasis (build, audit, debug, research, optimize) |
-| Adapter | Format for target model (Claude, Gemini, OpenAI) |
+That's it. You get back a prompt. You paste it. Prompt Forge never writes code, never runs builds, never executes anything. It's the architect, not the builder.
 
-### The 9 Perspective Lenses
+---
 
-1. **Business/Product** — Are we solving the right problem?
-2. **QA/Testing** — What should be tested? What could break?
-3. **Architecture/Design** — Does this follow existing patterns?
-4. **User Experience** — Loading states, error messages, accessibility
-5. **Security** — Auth, input validation, data exposure
-6. **Performance/Scalability** — Will this hold under load?
-7. **Developer Experience** — Will someone else understand this code?
-8. **Edge Cases & Error Handling** — Empty input, network down, concurrent access
-9. **Migration/Backwards Compatibility** — What existing code does this affect?
+## The 9 Lenses
 
-### Modes
+Things a fresh engineer thinks about but a tired one forgets:
 
-| Mode | Emphasis |
-|------|----------|
-| `build` | Implementation structure, patterns, step-by-step construction |
-| `audit` | Constraints, compliance, what NOT to do, verification gates |
-| `debug` | Investigation-first, root cause analysis, reproduction steps |
-| `research` | Exploration, alternatives, trade-off analysis, documentation |
-| `optimize` | Measurement-first, bottleneck identification, before/after metrics |
+| # | Lens | What It Catches |
+|---|------|----------------|
+| 1 | **Business/Product** | Building the technically elegant wrong thing |
+| 2 | **QA/Testing** | "Works on my machine" prompts with no test commands |
+| 3 | **Architecture** | Spaghetti that ignores existing patterns |
+| 4 | **User Experience** | Missing loading states, error messages, accessibility |
+| 5 | **Security** | Unvalidated input, auth gaps, data exposure |
+| 6 | **Performance** | N+1 queries, unindexed lookups, no caching strategy |
+| 7 | **Developer Experience** | Code that future-you will curse past-you for |
+| 8 | **Edge Cases** | Empty arrays, null users, network timeouts |
+| 9 | **Migration/Compat** | Breaking changes to downstream consumers |
 
-## Usage
+These aren't presented as a checklist. They're woven naturally into the prompt: *"The endpoint doesn't validate email format before the DB query — I'll include that. Also, there's no test for this route."*
 
-Invoke the skill in Claude Code or Gemini CLI:
+---
 
-```
-/prompt-forge add stripe payments
-/prompt-forge fix the login bug
-/prompt-forge audit the auth flow
-```
+## Modes
 
-Prompt Forge investigates your codebase, asks 1-3 easy questions, then delivers a copy-paste-ready prompt.
+Prompt Forge adapts its output based on what you're doing:
 
-## The Cardinal Rule
+| Mode | Emphasis | Auto-detected from |
+|------|----------|--------------------|
+| `build` | Patterns, step-by-step, done criteria | "add", "create", "implement" |
+| `audit` | Constraints, checklists, verification gates | "review", "check", "secure" |
+| `debug` | Investigation-first, root cause before fix | "fix", "bug", "broken" |
+| `research` | Alternatives, trade-offs, comparison tables | "how", "why", "explore" |
+| `optimize` | Measure first, prove the improvement | "slow", "performance", "cache" |
 
-**Prompt Forge investigates but never implements.** It reads files, searches code, fetches docs — but it never writes code, runs builds, or executes the prompt it generates. You copy the prompt, you choose when and where to run it.
+---
 
-## Directory Structure
+## LLM Adapters
+
+Same prompt intelligence, different formatting for each model:
+
+| Adapter | Formatting Style |
+|---------|-----------------|
+| **Claude** | XML tags, `@file` references, chain-of-thought |
+| **Gemini** | MUST/MUST NOT rules, markdown structure, search grounding |
+| **OpenAI** | System/user split, few-shot examples, bold constraints |
+
+---
+
+## Works With
+
+- **[Superpowers](https://github.com/obra/superpowers)** — Feeds brainstorming with design considerations already surfaced, so the Socratic questioning goes deeper instead of extracting basics
+- **[GSD](https://github.com/gsd-build/get-shit-done)** — Produces rich project briefs that give GSD's interview and research phases a head start instead of starting from nothing
+- **Raw Claude Code / Gemini CLI** — Outputs task-type-specific blueprints (bug fix, feature, refactor, migration, performance, security, investigation, testing)
+
+---
+
+## What's Inside
 
 ```
 prompt-forge/
-├── SKILL.md                              # Skill entrypoint + module index
-├── CONTRIBUTORS.md                       # Project contributors
-├── LICENSE                               # MIT
-├── README.md                             # This file
-│
+├── SKILL.md                          # Skill entrypoint
 ├── src/
 │   ├── core/
-│   │   ├── intent_parser.md              # Steps 1-4: input → grounding → questions
-│   │   ├── prompt_builder.md             # Steps 5-6: lenses → classification → output
-│   │   ├── constraints.md                # Cardinal rule + scope boundaries
-│   │   └── modes.md                      # 5 compilation modes
+│   │   ├── intent_parser.md          # Fatigue detection, grounding, questions
+│   │   ├── prompt_builder.md         # Lenses, task classification, output
+│   │   ├── modes.md                  # 5 compilation modes
+│   │   └── constraints.md            # The cardinal rule: never implement
 │   ├── adapters/
-│   │   ├── claude.md                     # Claude/Anthropic formatting
-│   │   ├── gemini.md                     # Gemini/Google formatting
-│   │   └── openai.md                     # OpenAI/GPT formatting
+│   │   ├── claude.md                 # Claude-specific formatting
+│   │   ├── gemini.md                 # Gemini-specific formatting
+│   │   └── openai.md                 # OpenAI-specific formatting
 │   ├── commands/
-│   │   └── prompt-forge.md               # Slash command entrypoint
+│   │   └── prompt-forge.md           # /prompt-forge slash command
 │   └── utils/
-│       └── helpers.md                    # Tone, collaboration, complexity adaptation
-│
+│       └── helpers.md                # Tone, collaboration, complexity adaptation
 ├── prompts/
-│   ├── templates/                        # 8 task-type blueprints + output formats
-│   └── examples/                         # Full walkthrough examples
-│
+│   ├── templates/                    # 8 task-type blueprints + output formats
+│   └── examples/                     # Full session walkthrough
 ├── evals/
-│   ├── test_cases.md                     # 14 functional test cases
-│   ├── adversarial_cases.md              # 15 boundary/failure mode tests
-│   ├── benchmark.md                      # Cross-model benchmark framework
-│   └── scoring.md                        # Scoring criteria and rubrics
-│
+│   ├── test_cases.md                 # 14 functional tests
+│   ├── adversarial_cases.md          # 15 boundary tests
+│   ├── benchmark.md                  # Cross-model benchmarks
+│   └── scoring.md                    # Scoring rubric
 └── docs/
-    ├── architecture.md                   # System design + mode system
-    └── usage.md                          # Integration guide
+    ├── architecture.md               # System design
+    └── usage.md                      # Integration guide
 ```
+
+---
 
 ## Installation
 
-Install as a plugin in your Claude Code or Gemini CLI setup — place this directory where your agent discovers skills/plugins.
+Place this directory where your agent discovers skills/plugins.
+
+**Claude Code:**
+```bash
+# Copy to your Claude Code skills directory
+```
+
+**Gemini CLI:**
+```bash
+# Copy to your Gemini extensions directory
+```
+
+Then invoke with:
+```
+/prompt-forge [your rough idea here]
+```
+
+---
+
+## Philosophy
+
+- **Investigate, never implement** — Prompt Forge reads your code aggressively but never touches it
+- **Fatigue is the enemy, not laziness** — "fix the thing" is a valid input
+- **Grounding over guessing** — Every file path, function name, and type in the output comes from actually reading the code
+- **Collaborate, don't obey** — It challenges bad assumptions and proposes alternatives
+- **Match complexity to the task** — A typo fix gets a one-liner, not five sections of context
+
+---
+
+## Contributing
+
+1. Fork the repository
+2. Create a branch for your changes
+3. Submit a PR
+
+See `docs/architecture.md` for system design and `evals/` for validation criteria.
+
+---
 
 ## Contributors
 
