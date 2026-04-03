@@ -1,0 +1,41 @@
+{
+  "name": "prompt-forge-cc",
+  "version": "1.0.0",
+  "description": "A prompt compiler skill for Claude Code, Gemini CLI, and other coding agents. Solves prompt fatigue.",
+  "bin": {
+    "prompt-forge-cc": "bin/install.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "prompts",
+    "evals",
+    "docs",
+    "SKILL.md"
+  ],
+  "keywords": [
+    "claude",
+    "claude-code",
+    "gemini",
+    "gemini-cli",
+    "prompt",
+    "prompt-engineering",
+    "ai",
+    "coding-agent",
+    "skill",
+    "plugin"
+  ],
+  "author": "Nirvaan (Nirvaan05), Hill Patel (STiFLeR7)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/STiFLeR7/prompt-forge.git"
+  },
+  "homepage": "https://github.com/STiFLeR7/prompt-forge",
+  "bugs": {
+    "url": "https://github.com/STiFLeR7/prompt-forge/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

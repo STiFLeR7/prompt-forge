@@ -140,21 +140,47 @@ prompt-forge/
 
 ## Installation
 
-Place this directory where your agent discovers skills/plugins.
-
-**Claude Code:**
 ```bash
-# Copy to your Claude Code skills directory
+npx prompt-forge-cc@latest
 ```
 
-**Gemini CLI:**
+The installer prompts you to choose:
+1. **Runtime** — Claude Code, Gemini CLI, or both
+2. **Scope** — Global (all projects) or local (current project only)
+
+### Non-interactive Install
+
 ```bash
-# Copy to your Gemini extensions directory
+# Claude Code (global — recommended)
+npx prompt-forge-cc --claude --global
+
+# Gemini CLI (global)
+npx prompt-forge-cc --gemini --global
+
+# Both runtimes
+npx prompt-forge-cc --all --global
+
+# Current project only
+npx prompt-forge-cc --claude --local
 ```
 
-Then invoke with:
+### Verify
+
+Start a new session and run:
 ```
-/prompt-forge [your rough idea here]
+/prompt-forge fix the auth thing
+```
+
+### Updating
+
+```bash
+npx prompt-forge-cc@latest
+```
+
+### Uninstall
+
+```bash
+npx prompt-forge-cc --uninstall
 ```
 
 ---
